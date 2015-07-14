@@ -13,10 +13,10 @@ var // Expectation library:
 	deepCloseTo = require( './utils/deepcloseto.js' ),
 
 	// Module to be tested:
-	beta = require( './../lib/matrix.js' ),
+	betaln = require( './../lib/matrix.js' ),
 
 	// Function to apply element-wise:
-	BETA = require( './../lib/number.js' );
+	BETALN = require( './../lib/number.js' );
 
 
 // VARIABLES //
@@ -27,7 +27,7 @@ var expect = chai.expect,
 
 // TESTS //
 
-describe( 'matrix beta', function tests() {
+describe( 'matrix betaln', function tests() {
 
 	var out1, out2,
 		mat,
@@ -41,8 +41,8 @@ describe( 'matrix beta', function tests() {
 	d3 = new Float64Array( 25 );
 	for ( i = 0; i < d1.length; i++ ) {
 		d1[ i ] = i;
-		d2[ i ] = BETA( i, i );
-		d3[ i ] = BETA( i, 2 );
+		d2[ i ] = BETALN( i, i );
+		d3[ i ] = BETALN( i, 2 );
 	}
 
 	beforeEach( function before() {
@@ -52,37 +52,37 @@ describe( 'matrix beta', function tests() {
 	});
 
 	it( 'should export a function', function test() {
-		expect( beta ).to.be.a( 'function' );
+		expect( betaln ).to.be.a( 'function' );
 	});
 
 	it( 'should throw an error if provided unequal length matrices', function test() {
 		expect( badValues ).to.throw( Error );
 		function badValues() {
-			beta( matrix( [10,10] ), mat, 1 );
+			betaln( matrix( [10,10] ), mat, 1 );
 		}
 	});
 
 	it( 'should throw an error if provided a y matrix which is not of equal dimensionality as the x matrix', function test() {
 		expect( badValues ).to.throw( Error );
 		function badValues() {
-			beta( matrix( [5,5] ), mat, matrix( [10,10] ) );
+			betaln( matrix( [5,5] ), mat, matrix( [10,10] ) );
 		}
 	});
 
-	it( 'should evaluate the beta function for a matrix and a scalar', function test() {
+	it( 'should evaluate the betaln function for a matrix and a scalar', function test() {
 		var actual;
 
 		actual = matrix( [5,5], 'float64' );
-		actual = beta( actual, mat, 2 );
+		actual = betaln( actual, mat, 2 );
 
 		assert.isTrue( deepCloseTo( actual.data, out2.data, 1e-7 ) );
 	});
 
-	it( 'should evaluate the beta function for a matrix and a matrix', function test() {
+	it( 'should evaluate the betaln function for a matrix and a matrix', function test() {
 		var actual;
 
 		actual = matrix( [5,5], 'float64' );
-		actual = beta( actual, mat, mat );
+		actual = betaln( actual, mat, mat );
 
 		assert.isTrue( deepCloseTo( actual.data, out1.data, 1e-7 ) );
 	});
@@ -94,13 +94,13 @@ describe( 'matrix beta', function tests() {
 		expected = matrix( [0,0] ).data;
 
 		mat = matrix( [0,10] );
-		assert.deepEqual( beta( out, mat, 1 ).data, expected );
+		assert.deepEqual( betaln( out, mat, 1 ).data, expected );
 
 		mat = matrix( [10,0] );
-		assert.deepEqual( beta( out, mat, 1 ).data, expected );
+		assert.deepEqual( betaln( out, mat, 1 ).data, expected );
 
 		mat = matrix( [0,0] );
-		assert.deepEqual( beta( out, mat, 1 ).data, expected );
+		assert.deepEqual( betaln( out, mat, 1 ).data, expected );
 	});
 
 

@@ -10,7 +10,7 @@ var // Expectation library:
 	deepCloseTo = require( './utils/deepcloseto.js' ),
 
 	// Module to be tested:
-	beta = require( './../lib/deepset.js' );
+	betaln = require( './../lib/deepset.js' );
 
 
 // VARIABLES //
@@ -21,13 +21,13 @@ var expect = chai.expect,
 
 // TESTS //
 
-describe( 'deepset beta', function tests() {
+describe( 'deepset betaln', function tests() {
 
 	it( 'should export a function', function test() {
-		expect( beta ).to.be.a( 'function' );
+		expect( betaln ).to.be.a( 'function' );
 	});
 
-	it( 'should evaluate the beta function when y is a scalar and deep set', function test() {
+	it( 'should evaluate the betaln function when y is a scalar and deep set', function test() {
 		var data, actual, expected;
 
 		data = [
@@ -37,7 +37,7 @@ describe( 'deepset beta', function tests() {
 			{'x':3}
 		];
 
-		actual = beta( data, 2, 'x' );
+		actual = betaln( data, 2, 'x' );
 
 		expected = [
 			{'x':0},
@@ -57,7 +57,7 @@ describe( 'deepset beta', function tests() {
 			{'x':[9,3]}
 		];
 
-		data = beta( data, 2, 'x/1', '/' );
+		data = betaln( data, 2, 'x/1', '/' );
 		expected = [
 			{'x':[9,0]},
 			{'x':[9,1]},
@@ -68,7 +68,7 @@ describe( 'deepset beta', function tests() {
 		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
 	});
 
-	it( 'should evaluate the beta function when y is an array and deep set', function test() {
+	it( 'should evaluate the betaln function when y is an array and deep set', function test() {
 		var data, actual, expected, y;
 
 		data = [
@@ -80,7 +80,7 @@ describe( 'deepset beta', function tests() {
 
 		y = [ 0, 1, 2, 3 ];
 
-		actual = beta( data, y, 'x' );
+		actual = betaln( data, y, 'x' );
 
 		expected = [
 			{'x':1},
@@ -100,7 +100,7 @@ describe( 'deepset beta', function tests() {
 			{'x':[9,3]}
 		];
 
-		data = beta( data, y, 'x/1', '/' );
+		data = betaln( data, y, 'x/1', '/' );
 		expected = [
 			{'x':[9,1]},
 			{'x':[9,1]},
@@ -114,8 +114,8 @@ describe( 'deepset beta', function tests() {
 
 	it( 'should return an empty array if provided an empty array', function test() {
 		var arr = [];
-		assert.deepEqual( beta( arr, 1, 'x' ), [] );
-		assert.deepEqual( beta( arr, 1, 'x', '/' ), [] );
+		assert.deepEqual( betaln( arr, 1, 'x' ), [] );
+		assert.deepEqual( betaln( arr, 1, 'x', '/' ), [] );
 	});
 
 	it( 'should handle non-numeric values by setting the element to NaN', function test() {
@@ -128,7 +128,7 @@ describe( 'deepset beta', function tests() {
 			{'x':[9,true]},
 			{'x':[9,3]}
 		];
-		actual = beta( data, null, 'x.1' );
+		actual = betaln( data, null, 'x.1' );
 		expected = [
 			{'x':[9,NaN]},
 			{'x':[9,NaN]},
@@ -144,7 +144,7 @@ describe( 'deepset beta', function tests() {
 			{'x':[9,true]},
 			{'x':[9,3]}
 		];
-		actual = beta( data, 1, 'x.1' );
+		actual = betaln( data, 1, 'x.1' );
 		expected = [
 			{'x':[9,NaN]},
 			{'x':[9,1]},
@@ -160,7 +160,7 @@ describe( 'deepset beta', function tests() {
 			{'x':[9,3]}
 		];
 		y = [ 0, 1, 2, 3];
-		actual = beta( data, y, 'x.1' );
+		actual = betaln( data, y, 'x.1' );
 		expected = [
 			{'x':[9,NaN]},
 			{'x':[9,1]},
@@ -176,7 +176,7 @@ describe( 'deepset beta', function tests() {
 			{'x':[9,3]}
 		];
 		y = new Int32Array( [0,1,2,3] );
-		actual = beta( data, y, 'x.1' );
+		actual = betaln( data, y, 'x.1' );
 		expected = [
 			{'x':[9,NaN]},
 			{'x':[9,1]},

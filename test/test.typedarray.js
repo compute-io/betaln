@@ -10,7 +10,7 @@ var // Expectation library:
 	deepCloseTo = require( './utils/deepcloseto.js' ),
 
 	// Module to be tested:
-	beta = require( './../lib/typedarray.js' );
+	betaln = require( './../lib/typedarray.js' );
 
 
 // VARIABLES //
@@ -21,10 +21,10 @@ var expect = chai.expect,
 
 // TESTS //
 
-describe( 'typed-array beta', function tests() {
+describe( 'typed-array betaln', function tests() {
 
 	it( 'should export a function', function test() {
-		expect( beta ).to.be.a( 'function' );
+		expect( betaln ).to.be.a( 'function' );
 	});
 
 
@@ -45,7 +45,7 @@ describe( 'typed-array beta', function tests() {
 		]);
 		actual = new Float64Array( data.length );
 
-		actual = beta( actual, data, y );
+		actual = betaln( actual, data, y );
 
 		expected = new Float64Array( [1,1,4,27] );
 
@@ -56,12 +56,12 @@ describe( 'typed-array beta', function tests() {
 	it( 'should throw an error if provided two typed arrays of differing lengths', function test() {
 		expect( foo ).to.throw( Error );
 		function foo() {
-			beta( new Array(2), new Int8Array( [1,2] ), new Int8Array( [1,2,3] ) );
+			betaln( new Array(2), new Int8Array( [1,2] ), new Int8Array( [1,2,3] ) );
 		}
 
 		expect( foo2 ).to.throw( Error );
 		function foo2() {
-			beta( new Array(2), new Int8Array( [1,2] ), [ 1, 2, 3 ] );
+			betaln( new Array(2), new Int8Array( [1,2] ), [ 1, 2, 3 ] );
 		}
 	});
 
@@ -75,7 +75,7 @@ describe( 'typed-array beta', function tests() {
 			4
 		]);
 		actual = new Array( data.length );
-		actual = beta( actual, data, null );
+		actual = betaln( actual, data, null );
 
 		expected = [ NaN, NaN, NaN, NaN ];
 
@@ -83,7 +83,7 @@ describe( 'typed-array beta', function tests() {
 
 		actual = new Array( data.length );
 		y = [ 1, 2, 3, null ];
-		actual = beta( actual, data, y );
+		actual = betaln( actual, data, y );
 
 		expected = [ 1, 4, 27, NaN ];
 
@@ -92,7 +92,7 @@ describe( 'typed-array beta', function tests() {
 	});
 
 	it( 'should return an empty array if provided an empty array', function test() {
-		assert.deepEqual( beta( new Int8Array(), new Int8Array() ), new Int8Array() );
+		assert.deepEqual( betaln( new Int8Array(), new Int8Array() ), new Int8Array() );
 	});
 
 

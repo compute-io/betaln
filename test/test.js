@@ -16,10 +16,10 @@ var // Expectation library:
 	deepCloseTo = require( './utils/deepcloseto.js' ),
 
 	// Module to be tested:
-	beta = require( './../lib' ),
+	betaln = require( './../lib' ),
 
 	// Function to apply element-wise:
-	BETA = require( './../lib/number.js' );
+	BETALN = require( './../lib/number.js' );
 
 
 // VARIABLES //
@@ -30,10 +30,10 @@ var expect = chai.expect,
 
 // TESTS //
 
-describe( 'compute-beta', function tests() {
+describe( 'compute-betaln', function tests() {
 
 	it( 'should export a function', function test() {
-		expect( beta ).to.be.a( 'function' );
+		expect( betaln ).to.be.a( 'function' );
 	});
 
 	it( 'should throw an error if provided an invalid option', function test() {
@@ -53,7 +53,7 @@ describe( 'compute-beta', function tests() {
 		}
 		function badValue( value ) {
 			return function() {
-				beta( [1,2,3], {
+				betaln( [1,2,3], {
 					'accessor': value
 				});
 			};
@@ -71,7 +71,7 @@ describe( 'compute-beta', function tests() {
 		}
 		function badValue( value ) {
 			return function() {
-				beta( [1,2,3], , 1,  {
+				betaln( [1,2,3], , 1,  {
 					'dtype': value
 				});
 			};
@@ -89,7 +89,7 @@ describe( 'compute-beta', function tests() {
 		}
 		function badValue( value ) {
 			return function() {
-				beta( new Int8Array([1,2,3]), , 1,  {
+				betaln( new Int8Array([1,2,3]), , 1,  {
 					'dtype': value
 				});
 			};
@@ -107,7 +107,7 @@ describe( 'compute-beta', function tests() {
 		}
 		function badValue( value ) {
 			return function() {
-				beta( matrix( [2,2] ), , 1,  {
+				betaln( matrix( [2,2] ), , 1,  {
 					'dtype': value
 				});
 			};
@@ -126,7 +126,7 @@ describe( 'compute-beta', function tests() {
 		];
 
 		for ( var i = 0; i < values.length; i++ ) {
-			assert.isTrue( isnan( beta( values[ i ], 1,  ) ) );
+			assert.isTrue( isnan( betaln( values[ i ], 1,  ) ) );
 		}
 	});
 
@@ -144,7 +144,7 @@ describe( 'compute-beta', function tests() {
 		}
 		function badValue( value ) {
 			return function() {
-				beta( 1, [1,2,3], value );
+				betaln( 1, [1,2,3], value );
 			};
 		}
 	});
@@ -161,37 +161,37 @@ describe( 'compute-beta', function tests() {
 		];
 
 		for ( var i = 0; i < values.length; i++ ) {
-			assert.isTrue( isnan( beta( 1, values[ i ] ) ) );
+			assert.isTrue( isnan( betaln( 1, values[ i ] ) ) );
 		}
 	});
 
-	it( 'should evaluate the  beta function for two numbers', function test() {
-		assert.strictEqual( beta( 2, 4 ), 16 );
-		assert.strictEqual( beta( 3, 3 ), 27 );
+	it( 'should evaluate the  betaln function for two numbers', function test() {
+		assert.strictEqual( betaln( 2, 4 ), 16 );
+		assert.strictEqual( betaln( 3, 3 ), 27 );
 	});
 
-	it( 'should evaluate the  beta function for a scalar and an array', function test() {
+	it( 'should evaluate the  betaln function for a scalar and an array', function test() {
 		var data, actual, expected;
 		data = [ 1, 2 ];
-		actual = beta( 2, data );
+		actual = betaln( 2, data );
 		expected = [ 2, 4 ];
 		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
 	});
 
-	it( 'should evaluate the  beta function for a scalar and a matrix', function test() {
+	it( 'should evaluate the  betaln function for a scalar and a matrix', function test() {
 		var data, actual, expected;
 		data = matrix( new Int8Array( [ 1,2,3,4 ] ), [2,2] );
-		actual = beta( 2, data );
+		actual = betaln( 2, data );
 		expected = matrix( new Float64Array( [2,4,8,16] ), [2,2] );
 
 		assert.deepEqual( actual.data, expected.data );
 	});
 
 
-	it( 'should evaluate the beta function for a scalar and an array and cast result to a different dtype', function test() {
+	it( 'should evaluate the betaln function for a scalar and an array and cast result to a different dtype', function test() {
 		var data, actual, expected;
 		data = [ 1, 2 ];
-		actual = beta( 10, data, {
+		actual = betaln( 10, data, {
 			'dtype':'int32'
 		});
 		expected = new Int32Array( [10,100] );
@@ -199,10 +199,10 @@ describe( 'compute-beta', function tests() {
 	});
 
 
-	it( 'should evaluate the beta function for a scalar and a matrix and cast to a different dtype', function test() {
+	it( 'should evaluate the betaln function for a scalar and a matrix and cast to a different dtype', function test() {
 		var data, actual, expected;
 		data = matrix( new Int8Array( [ 1,2,3,4 ] ), [2,2] );
-		actual = beta( 2, data, {
+		actual = betaln( 2, data, {
 			'dtype': 'int32'
 		});
 		expected = matrix( new Int32Array( [2,4,8,16] ), [2,2] );
@@ -211,10 +211,10 @@ describe( 'compute-beta', function tests() {
 		assert.deepEqual( actual.data, expected.data );
 	});
 
-	it( 'should evaluate the beta function for a matrix and a scalar and cast to a different dtype', function test() {
+	it( 'should evaluate the betaln function for a matrix and a scalar and cast to a different dtype', function test() {
 		var data, actual, expected;
 		data = matrix( new Int8Array( [1,2,3,4] ), [2,2] );
-		actual = beta( data, 2, {
+		actual = betaln( data, 2, {
 			'dtype': 'int32'
 		});
 		expected = matrix( new Int32Array( [2,4,8,16] ), [2,2] );
@@ -223,7 +223,7 @@ describe( 'compute-beta', function tests() {
 		assert.deepEqual( actual.data, expected.data );
 	});
 
-	it( 'should evaluate the beta function for a plain array and a scalar', function test() {
+	it( 'should evaluate the betaln function for a plain array and a scalar', function test() {
 		var data, actual, expected;
 
 		data = [ 0, 1, 2, 3 ];
@@ -234,13 +234,13 @@ describe( 'compute-beta', function tests() {
 			27
 		];
 
-		actual = beta( data, 3 );
+		actual = betaln( data, 3 );
 		assert.notEqual( actual, data );
 
 		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
 
 		// Mutate...
-		actual = beta( data, 3, {
+		actual = betaln( data, 3, {
 			'copy': false
 		});
 		assert.strictEqual( actual, data );
@@ -249,7 +249,7 @@ describe( 'compute-beta', function tests() {
 
 	});
 
-	it( 'should evaluate the beta function for a plain array and another array', function test() {
+	it( 'should evaluate the betaln function for a plain array and another array', function test() {
 		var data, actual, expected;
 
 		data = [ 0, 1, 2, 3 ];
@@ -260,13 +260,13 @@ describe( 'compute-beta', function tests() {
 			27
 		];
 
-		actual = beta( data, data );
+		actual = betaln( data, data );
 		assert.notEqual( actual, data );
 
 		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
 
 		// Mutate...
-		actual = beta( data, data, {
+		actual = betaln( data, data, {
 			'copy': false
 		});
 		assert.strictEqual( actual, data );
@@ -275,7 +275,7 @@ describe( 'compute-beta', function tests() {
 
 	});
 
-	it( 'should evaluate the beta function for a typed array and a scalar', function test() {
+	it( 'should evaluate the betaln function for a typed array and a scalar', function test() {
 		var data, actual, expected;
 
 		data = new Int8Array( [ 0, 1, 2, 3 ] );
@@ -287,13 +287,13 @@ describe( 'compute-beta', function tests() {
 			27
 		]);
 
-		actual = beta( data, 3 );
+		actual = betaln( data, 3 );
 		assert.notEqual( actual, data );
 
 		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
 
 		// Mutate:
-		actual = beta( data, 3, {
+		actual = betaln( data, 3, {
 			'copy': false
 		});
 		assert.strictEqual( actual, data );
@@ -302,7 +302,7 @@ describe( 'compute-beta', function tests() {
 		assert.deepEqual( data, expected );
 	});
 
-	it( 'should evaluate the beta function for a typed array and another typed array', function test() {
+	it( 'should evaluate the betaln function for a typed array and another typed array', function test() {
 		var data, actual, expected;
 
 		data = new Int8Array( [ 0, 1, 2, 3 ] );
@@ -314,13 +314,13 @@ describe( 'compute-beta', function tests() {
 			27
 		]);
 
-		actual = beta( data, data );
+		actual = betaln( data, data );
 		assert.notEqual( actual, data );
 		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
 
 		// Mutate:
 
-		actual = beta( data, data, {
+		actual = betaln( data, data, {
 			'copy': false
 		});
 		expected = new Int8Array( [ 1, 1, 4, 27 ] );
@@ -329,13 +329,13 @@ describe( 'compute-beta', function tests() {
 		assert.deepEqual( data, expected );
 	});
 
-	it( 'should evaluate the beta function for a typed array and a scalar and return an array of a specific type', function test() {
+	it( 'should evaluate the betaln function for a typed array and a scalar and return an array of a specific type', function test() {
 		var data, actual, expected;
 
 		data = [ 0, 1, 2, 3 ];
 		expected = new Int8Array( [ 0, 1, 16, 81 ] );
 
-		actual = beta( data, 4, {
+		actual = betaln( data, 4, {
 			'dtype': 'int8'
 		});
 		assert.notEqual( actual, data );
@@ -343,7 +343,7 @@ describe( 'compute-beta', function tests() {
 		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
 	});
 
-	it( 'should evaluate the beta function for an object array and a scalar using an accessor', function test() {
+	it( 'should evaluate the betaln function for an object array and a scalar using an accessor', function test() {
 		var data, actual, expected;
 
 		data = [
@@ -360,7 +360,7 @@ describe( 'compute-beta', function tests() {
 			1
 		];
 
-		actual = beta( data, 0, {
+		actual = betaln( data, 0, {
 			'accessor': getValue
 		});
 		assert.notEqual( actual, data );
@@ -368,7 +368,7 @@ describe( 'compute-beta', function tests() {
 		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
 
 		// Mutate:
-		actual = beta( data, 0, {
+		actual = betaln( data, 0, {
 			'accessor': getValue,
 			'copy': false
 		});
@@ -381,7 +381,7 @@ describe( 'compute-beta', function tests() {
 		}
 	});
 
-	it( 'should evaluate the beta function for two object arrays using an accessor', function test() {
+	it( 'should evaluate the betaln function for two object arrays using an accessor', function test() {
 		var data, actual, expected, y;
 
 		data = [
@@ -398,7 +398,7 @@ describe( 'compute-beta', function tests() {
 			{'y':3}
 		];
 
-		actual = beta( data, y, {
+		actual = betaln( data, y, {
 			'accessor': getValue
 		});
 
@@ -421,7 +421,7 @@ describe( 'compute-beta', function tests() {
 
 	});
 
-	it( 'should evaluate the beta function for an array and a scalar and deep set', function test() {
+	it( 'should evaluate the betaln function for an array and a scalar and deep set', function test() {
 		var data, actual, expected;
 
 		data = [
@@ -437,7 +437,7 @@ describe( 'compute-beta', function tests() {
 			{'x':[6,27]}
 		];
 
-		actual = beta( data, 3, {
+		actual = betaln( data, 3, {
 			'path': 'x.1'
 		});
 
@@ -452,7 +452,7 @@ describe( 'compute-beta', function tests() {
 			{'x':[5,2]},
 			{'x':[6,3]}
 		];
-		actual = beta( data, 3, {
+		actual = betaln( data, 3, {
 			'path': 'x/1',
 			'sep': '/'
 		});
@@ -461,7 +461,7 @@ describe( 'compute-beta', function tests() {
 		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
 	});
 
-	it( 'should evaluate the beta function for an array with another array and deep set', function test() {
+	it( 'should evaluate the betaln function for an array with another array and deep set', function test() {
 		var data, actual, expected, y;
 
 		data = [
@@ -473,7 +473,7 @@ describe( 'compute-beta', function tests() {
 
 		y = [ 0, 1, 2, 3 ];
 
-		actual = beta( data, y, {
+		actual = betaln( data, y, {
 			path: 'x'
 		});
 
@@ -495,7 +495,7 @@ describe( 'compute-beta', function tests() {
 			{'x':[9,3]}
 		];
 
-		data = beta( data, y, {
+		data = betaln( data, y, {
 			'path': 'x/1',
 			'sep': '/'
 		});
@@ -509,7 +509,7 @@ describe( 'compute-beta', function tests() {
 		assert.deepEqual( data, expected, 'custom separator' );
 	});
 
-	it( 'should evaluate the beta function for a matrix and a scalar', function test() {
+	it( 'should evaluate the betaln function for a matrix and a scalar', function test() {
 		var mat,
 			out,
 			d1,
@@ -522,26 +522,26 @@ describe( 'compute-beta', function tests() {
 		d3 = new Int32Array( 100 );
 		for ( i = 0; i < d1.length; i++ ) {
 			d1[ i ] = i;
-			d2[ i ] = Math.beta( i, i );
-			d3[ i ] = Math.beta( i, 2 );
+			d2[ i ] = Math.betaln( i, i );
+			d3[ i ] = Math.betaln( i, 2 );
 		}
 
 		// Raise matrix elements to a scalar power
 		mat = matrix( d1, [10,10], 'int32' );
-		out = beta( mat, 2, {
+		out = betaln( mat, 2, {
 			'dtype': 'int32'
 		});
 
 		assert.deepEqual( out.data, d3 );
 
 		mat = matrix( d1, [10,10], 'int32' );
-		out = beta( mat, mat, {
+		out = betaln( mat, mat, {
 			'dtype': 'int32'
 		});
 
 		assert.deepEqual( out.data, d2 );
 
-		out = beta( mat, 2, {
+		out = betaln( mat, 2, {
 			'copy': false
 		});
 
@@ -549,7 +549,7 @@ describe( 'compute-beta', function tests() {
 		assert.deepEqual( mat.data, d3 );
 	});
 
-	it( 'should evaluate the beta function for a matrix and a scalar and return a matrix of a specific type', function test() {
+	it( 'should evaluate the betaln function for a matrix and a scalar and return a matrix of a specific type', function test() {
 		var mat,
 			out,
 			d1,
@@ -560,10 +560,10 @@ describe( 'compute-beta', function tests() {
 		d2 = new Uint16Array( 100 );
 		for ( i = 0; i < d1.length; i++ ) {
 			d1[ i ] = i;
-			d2[ i ] = Math.beta( i, 2 );
+			d2[ i ] = Math.betaln( i, 2 );
 		}
 		mat = matrix( d1, [10,10], 'int16' );
-		out = beta( mat, 2, {
+		out = betaln( mat, 2, {
 			'dtype': 'uint16'
 		});
 
@@ -572,9 +572,9 @@ describe( 'compute-beta', function tests() {
 	});
 
 	it( 'should return an empty data structure if provided an empty data structure', function test() {
-		assert.deepEqual( beta( [], 1 ), [] );
-		assert.deepEqual( beta( matrix( [0,0] ), 1 ).data, matrix( [0,0] ).data );
-		assert.deepEqual( beta( new Int8Array(), 1 ), new Float64Array() );
+		assert.deepEqual( betaln( [], 1 ), [] );
+		assert.deepEqual( betaln( matrix( [0,0] ), 1 ).data, matrix( [0,0] ).data );
+		assert.deepEqual( betaln( new Int8Array(), 1 ), new Float64Array() );
 	});
 
 

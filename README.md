@@ -17,10 +17,10 @@ For use in the browser, use [browserify](https://github.com/substack/node-browse
 ## Usage
 
 ``` javascript
-var beta = require( 'compute-betaln' );
+var betaln = require( 'compute-betaln' );
 ```
 
-#### beta( x[, options] )
+#### betaln( x[, options] )
 
 Evaluates the [error function](http://en.wikipedia.org/wiki/Error_function) (element-wise). `x` may be either a [`number`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number), an [`array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array), a [`typed array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Typed_arrays), or a [`matrix`](https://github.com/dstructs/matrix). 
 
@@ -31,18 +31,18 @@ var matrix = require( 'dstructs-matrix' ),
 	out,
 	i;
 
-out = beta( -1 );
+out = betaln( -1 );
 // returns -0.8427
 
-out = beta( [ -10, -1, 0, 1, 10 ] );
+out = betaln( [ -10, -1, 0, 1, 10 ] );
 // returns [ -1, -0.8427, 0, 0.8427, 1 ]
 
 data = [ 0, 1, 2 ];
-out = beta( data );
+out = betaln( data );
 // returns [ 0, ~0.8427007, ~0.9953222 ]
 
 data = new Int8Array( data );
-out = beta( data );
+out = betaln( data );
 // returns Float64Array( [ 0, ~0.8427007, ~0.9953222 ] )
 
 data = new Float64Array( 6 );
@@ -56,7 +56,7 @@ mat = matrix( data, [3,2], 'float64' );
 	  2  2.5 ]
 */
 
-out = beta( mat );
+out = betaln( mat );
 /*
 	[  0    ~0.52
 	  ~0.84 ~0.97
@@ -87,7 +87,7 @@ function getValue( d, i ) {
 	return d[ 1 ];
 }
 
-var out = beta( data, {
+var out = betaln( data, {
 	'accessor': getValue
 });
 // returns [ -1, -0.8427, 0, 0.8427, 1 ]
@@ -104,7 +104,7 @@ var data = [
 	{'x':[4,10]}
 ];
 
-var out = beta( data, 'x|1', '|' );
+var out = betaln( data, 'x|1', '|' );
 /*
 	[
 		{'x':[0,-1]},
@@ -126,13 +126,13 @@ var data, out;
 
 data = new Int8Array( [0, 1, 2] );
 
-out = beta( data, {
+out = betaln( data, {
 	'dtype': 'int32'
 });
 // returns Int32Array( [0,0,0] )
 
 // Works for plain arrays, as well...
-out = beta( [0, 1, 2], {
+out = betaln( [0, 1, 2], {
 	'dtype': 'uint8'
 });
 // returns Uint8Array( [0,0,0] )
@@ -149,7 +149,7 @@ var data,
 
 var data = [ -10, -1, 0, 1, 10 ];
 
-var out = beta( data, {
+var out = betaln( data, {
 	'copy': false
 });
 // returns [ -1, -0.8427, 0, 0.8427, 1 ]
@@ -168,7 +168,7 @@ mat = matrix( data, [3,2], 'float64' );
 	  2  2.5 ]
 */
 
-out = beta( mat, {
+out = betaln( mat, {
 	'copy': false
 });
 /*
@@ -189,16 +189,16 @@ bool = ( mat === out );
 	``` javascript
 	var data, out;
 
-	out = beta( null );
+	out = betaln( null );
 	// returns NaN
 
-	out = beta( true );
+	out = betaln( true );
 	// returns NaN
 
-	out = beta( {'a':'b'} );
+	out = betaln( {'a':'b'} );
 	// returns NaN
 
-	out = beta( [ true, null, [] ] );
+	out = betaln( [ true, null, [] ] );
 	// returns [ NaN, NaN, NaN ]
 
 	function getValue( d, i ) {
@@ -211,12 +211,12 @@ bool = ( mat === out );
 		{'x':null}
 	];
 
-	out = beta( data, {
+	out = betaln( data, {
 		'accessor': getValue
 	});
 	// returns [ NaN, NaN, NaN, NaN ]
 
-	out = beta( data, {
+	out = betaln( data, {
 		'path': 'x'
 	});
 	/*
@@ -232,7 +232,7 @@ bool = ( mat === out );
 *	Be careful when providing a data structure which contains non-numeric elements and specifying an `integer` output data type, as `NaN` values are cast to `0`.
 
 	``` javascript
-	var out = beta( [ true, null, [] ], {
+	var out = betaln( [ true, null, [] ], {
 		'dtype': 'int8'
 	});
 	// returns Int8Array( [0,0,0] );
@@ -243,7 +243,7 @@ bool = ( mat === out );
 
 ``` javascript
 var matrix = require( 'dstructs-matrix' ),
-	beta = require( 'compute-betaln' );
+	betaln = require( 'compute-betaln' );
 
 var data,
 	mat,
@@ -256,7 +256,7 @@ data = new Array( 10 );
 for ( i = 0; i < data.length; i++ ) {
 	data[ i ] = Math.random()*20 - 10;
 }
-out = beta( data );
+out = betaln( data );
 
 // Object arrays (accessors)...
 function getValue( d ) {
@@ -267,7 +267,7 @@ for ( i = 0; i < data.length; i++ ) {
 		'x': data[ i ]
 	};
 }
-out = beta( data, {
+out = betaln( data, {
 	'accessor': getValue
 });
 
@@ -277,7 +277,7 @@ for ( i = 0; i < data.length; i++ ) {
 		'x': [ i, data[ i ].x ]
 	};
 }
-out = beta( data, {
+out = betaln( data, {
 	'path': 'x/1',
 	'sep': '/'
 });
@@ -287,7 +287,7 @@ data = new Int32Array( 10 );
 for ( i = 0; i < data.length; i++ ) {
 	data[ i ] = Math.random() * 100;
 }
-tmp = beta( data );
+tmp = betaln( data );
 out = '';
 for ( i = 0; i < data.length; i++ ) {
 	out += tmp[ i ];
@@ -298,11 +298,11 @@ for ( i = 0; i < data.length; i++ ) {
 
 // Matrices...
 mat = matrix( data, [5,2], 'int32' );
-out = beta( mat );
+out = betaln( mat );
 
 
 // Matrices (custom output data type)...
-out = beta( mat, {
+out = betaln( mat, {
 	'dtype': 'uint8'
 });
 ```

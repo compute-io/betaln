@@ -1,7 +1,7 @@
 'use strict';
 
 var matrix = require( 'dstructs-matrix' ),
-	 beta = require( './../lib' );
+	 betaln = require( './../lib' );
 
 var data,
 	mat,
@@ -15,7 +15,7 @@ data = new Array( 10 );
 for ( i = 0; i < data.length; i++ ) {
 	data[ i ] = Math.random()*20 - 10;
 }
-out = beta( data );
+out = betaln( data );
 console.log( 'Arrays: %s\n', out );
 
 
@@ -29,7 +29,7 @@ for ( i = 0; i < data.length; i++ ) {
 		'x': data[ i ]
 	};
 }
-out = beta( data, {
+out = betaln( data, {
 	'accessor': getValue
 });
 console.log( 'Accessors: %s\n', out );
@@ -42,7 +42,7 @@ for ( i = 0; i < data.length; i++ ) {
 		'x': [ i, data[ i ].x ]
 	};
 }
-out = beta( data, {
+out = betaln( data, {
 	'path': 'x/1',
 	'sep': '/'
 });
@@ -57,7 +57,7 @@ data = new Int32Array( 10 );
 for ( i = 0; i < data.length; i++ ) {
 	data[ i ] = Math.random() * 100;
 }
-tmp = beta( data );
+tmp = betaln( data );
 out = '';
 for ( i = 0; i < data.length; i++ ) {
 	out += tmp[ i ];
@@ -71,13 +71,13 @@ console.log( 'Typed arrays: %s\n', out );
 // ----
 // Matrices...
 mat = matrix( data, [5,2], 'int32' );
-out = beta( mat );
+out = betaln( mat );
 console.log( 'Matrix: %s\n', out.toString() );
 
 
 // ----
 // Matrices (custom output data type)...
-out = beta( mat, {
+out = betaln( mat, {
 	'dtype': 'uint8'
 });
 console.log( 'Matrix (%s): %s\n', out.dtype, out.toString() );
