@@ -36,6 +36,15 @@ describe( 'compute-betaln', function tests() {
 		expect( betaln ).to.be.a( 'function' );
 	});
 
+	it( 'should throw an error if provided only one argument', function test() {
+
+		expect( badValue ).to.throw( Error );
+
+		function badValue() {
+				betaln( [1,2,3] );
+		}
+	});
+
 	it( 'should throw an error if provided an invalid option', function test() {
 		var values = [
 			'5',
@@ -53,7 +62,7 @@ describe( 'compute-betaln', function tests() {
 		}
 		function badValue( value ) {
 			return function() {
-				betaln( [1,2,3], {
+				betaln( [1,2,3], 1, {
 					'accessor': value
 				});
 			};
@@ -71,7 +80,7 @@ describe( 'compute-betaln', function tests() {
 		}
 		function badValue( value ) {
 			return function() {
-				betaln( [1,2,3], , 1,  {
+				betaln( [1,2,3], 1,  {
 					'dtype': value
 				});
 			};
@@ -89,7 +98,7 @@ describe( 'compute-betaln', function tests() {
 		}
 		function badValue( value ) {
 			return function() {
-				betaln( new Int8Array([1,2,3]), , 1,  {
+				betaln( new Int8Array([1,2,3]), 1,  {
 					'dtype': value
 				});
 			};
@@ -107,7 +116,7 @@ describe( 'compute-betaln', function tests() {
 		}
 		function badValue( value ) {
 			return function() {
-				betaln( matrix( [2,2] ), , 1,  {
+				betaln( matrix( [2,2] ), 1,  {
 					'dtype': value
 				});
 			};
@@ -126,10 +135,9 @@ describe( 'compute-betaln', function tests() {
 		];
 
 		for ( var i = 0; i < values.length; i++ ) {
-			assert.isTrue( isnan( betaln( values[ i ], 1,  ) ) );
+			assert.isTrue( isnan( betaln( values[ i ], 1 ) ) );
 		}
 	});
-
 
 
 	it( 'should throw an error if provided a number as the first argument and an not applicable option', function test() {
@@ -166,25 +174,27 @@ describe( 'compute-betaln', function tests() {
 	});
 
 	it( 'should evaluate the  betaln function for two numbers', function test() {
-		assert.strictEqual( betaln( 2, 4 ), 16 );
-		assert.strictEqual( betaln( 3, 3 ), 27 );
+		assert.closeTo( betaln( 2, 4 ), -2.99573227355399, 1e-12 );
+		assert.closeTo( betaln( 3, 3 ), -3.40119738166216, 1e-12 );
 	});
 
 	it( 'should evaluate the  betaln function for a scalar and an array', function test() {
 		var data, actual, expected;
 		data = [ 1, 2 ];
 		actual = betaln( 2, data );
-		expected = [ 2, 4 ];
+		expected = [ -0.693147180559945, -1.791759469228055 ];
 		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
 	});
 
 	it( 'should evaluate the  betaln function for a scalar and a matrix', function test() {
-		var data, actual, expected;
+		var data, actual, expected, i;
 		data = matrix( new Int8Array( [ 1,2,3,4 ] ), [2,2] );
 		actual = betaln( 2, data );
-		expected = matrix( new Float64Array( [2,4,8,16] ), [2,2] );
+		expected = matrix( new Float64Array( [-0.693147180559945,-1.79175946922805,-2.484906649788,-2.99573227355399] ), [2,2] );
 
-		assert.deepEqual( actual.data, expected.data );
+		for ( i = 0; i < actual.length; i++ ) {
+			assert.closeTo( actual.data[ i ], expected.data[ i ], 1e-7 );
+		}
 	});
 
 
@@ -194,7 +204,7 @@ describe( 'compute-betaln', function tests() {
 		actual = betaln( 10, data, {
 			'dtype':'int32'
 		});
-		expected = new Int32Array( [10,100] );
+		expected = new Int32Array( [-2,-4] );
 		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
 	});
 
@@ -205,7 +215,7 @@ describe( 'compute-betaln', function tests() {
 		actual = betaln( 2, data, {
 			'dtype': 'int32'
 		});
-		expected = matrix( new Int32Array( [2,4,8,16] ), [2,2] );
+		expected = matrix( new Int32Array( [0,-1,-2,-2] ), [2,2] );
 
 		assert.strictEqual( actual.dtype, 'int32' );
 		assert.deepEqual( actual.data, expected.data );
@@ -217,7 +227,7 @@ describe( 'compute-betaln', function tests() {
 		actual = betaln( data, 2, {
 			'dtype': 'int32'
 		});
-		expected = matrix( new Int32Array( [2,4,8,16] ), [2,2] );
+		expected = matrix( new Int32Array( [0,-1,-2,-2] ), [2,2] );
 
 		assert.strictEqual( actual.dtype, 'int32' );
 		assert.deepEqual( actual.data, expected.data );
@@ -226,38 +236,45 @@ describe( 'compute-betaln', function tests() {
 	it( 'should evaluate the betaln function for a plain array and a scalar', function test() {
 		var data, actual, expected;
 
-		data = [ 0, 1, 2, 3 ];
+		data = [
+			0.1,
+			0.2,
+			0.3,
+			0.4,
+			0.5
+		];
 		expected = [
-			0,
-			1,
-			8,
-			27
+			2.20727491318972,
+			1.42711635564015,
+			0.941608539858445,
+			0.579818495252942,
+			0.287682072451781
 		];
 
-		actual = betaln( data, 3 );
+		actual = betaln( data, 2 );
 		assert.notEqual( actual, data );
 
 		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
 
 		// Mutate...
-		actual = betaln( data, 3, {
+		actual = betaln( data, 2, {
 			'copy': false
 		});
 		assert.strictEqual( actual, data );
 
-		assert.deepEqual( data, expected );
+		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
 
 	});
 
 	it( 'should evaluate the betaln function for a plain array and another array', function test() {
 		var data, actual, expected;
 
-		data = [ 0, 1, 2, 3 ];
+		data = [ 1, 2, 3, 4 ];
 		expected = [
-			1,
-			1,
-			4,
-			27
+			0,
+			-1.79175946922805,
+			-3.40119738166216,
+			-4.9416424226093
 		];
 
 		actual = betaln( data, data );
@@ -271,69 +288,80 @@ describe( 'compute-betaln', function tests() {
 		});
 		assert.strictEqual( actual, data );
 
-		assert.deepEqual( data, expected );
+		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
 
 	});
 
 	it( 'should evaluate the betaln function for a typed array and a scalar', function test() {
-		var data, actual, expected;
+		var data, actual, expected, i;
 
-		data = new Int8Array( [ 0, 1, 2, 3 ] );
+		data = new Int8Array( [ 10, 20, 30, 40 ] );
 
 		expected = new Float64Array( [
-			0,
-			1,
-			8,
-			27
+			-6.49223983502047,
+			-8.43814998407579,
+			-9.60777330838708,
+			-10.4469739585417
 		]);
 
 		actual = betaln( data, 3 );
 		assert.notEqual( actual, data );
 
-		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
+		for ( i = 0; i < actual.length; i++ ) {
+			assert.closeTo( actual[ i ], expected[ i ], 1e-7 );
+		}
 
 		// Mutate:
 		actual = betaln( data, 3, {
 			'copy': false
 		});
 		assert.strictEqual( actual, data );
-		expected = new Int8Array( [ 0, 1, 8, 27 ] );
+		expected = new Int8Array( [ -6, -8, -9, -10 ] );
 
 		assert.deepEqual( data, expected );
 	});
 
 	it( 'should evaluate the betaln function for a typed array and another typed array', function test() {
-		var data, actual, expected;
+		var data, actual, expected, i;
 
-		data = new Int8Array( [ 0, 1, 2, 3 ] );
+		data = new Int8Array( [ 1, 2, 3, 4 ] );
 
 		expected = new Float64Array( [
-			1,
-			1,
-			4,
-			27
+			0,
+			-1.79175946922805,
+			-3.40119738166216,
+			-4.9416424226093
 		]);
 
 		actual = betaln( data, data );
 		assert.notEqual( actual, data );
-		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
+		for ( i = 0; i < actual.length; i++ ) {
+			assert.closeTo( actual[ i ], expected[ i ], 1e-14 );
+		}
 
-		// Mutate:
-
+		// Mutate
 		actual = betaln( data, data, {
 			'copy': false
 		});
-		expected = new Int8Array( [ 1, 1, 4, 27 ] );
+		expected = new Int8Array( [ 0, -1, -3, -4 ] );
 		assert.strictEqual( actual, data );
 
-		assert.deepEqual( data, expected );
+		for ( i = 0; i < actual.length; i++ ) {
+			assert.closeTo( actual[ i ], expected[ i ], 1e-14 );
+		}
+
 	});
 
 	it( 'should evaluate the betaln function for a typed array and a scalar and return an array of a specific type', function test() {
 		var data, actual, expected;
 
-		data = [ 0, 1, 2, 3 ];
-		expected = new Int8Array( [ 0, 1, 16, 81 ] );
+		data = [ 4, 8, 12, 16 ];
+		expected = new Int8Array([
+			-4.9416424226093,
+			-7.18538701558042,
+			-8.60520406873895,
+			-9.64885333413055
+		]);
 
 		actual = betaln( data, 4, {
 			'dtype': 'int8'
@@ -347,20 +375,20 @@ describe( 'compute-betaln', function tests() {
 		var data, actual, expected;
 
 		data = [
-			[3,0],
-			[4,1],
-			[5,2],
-			[6,3]
+			[3,1],
+			[4,2],
+			[5,3],
+			[6,300]
 		];
 
 		expected = [
-			1,
-			1,
-			1,
-			1
+			-0.693147180559945,
+			-1.79175946922805,
+			-2.484906649788,
+			-11.4108927394051
 		];
 
-		actual = betaln( data, 0, {
+		actual = betaln( data, 2, {
 			'accessor': getValue
 		});
 		assert.notEqual( actual, data );
@@ -368,13 +396,13 @@ describe( 'compute-betaln', function tests() {
 		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
 
 		// Mutate:
-		actual = betaln( data, 0, {
+		actual = betaln( data, 2, {
 			'accessor': getValue,
 			'copy': false
 		});
 		assert.strictEqual( actual, data );
 
-		assert.deepEqual( data, expected );
+		assert.isTrue( deepCloseTo( data, expected, 1e-7 ) );
 
 		function getValue( d ) {
 			return d[ 1 ];
@@ -385,17 +413,17 @@ describe( 'compute-betaln', function tests() {
 		var data, actual, expected, y;
 
 		data = [
-			{'x':0},
-			{'x':1},
-			{'x':2},
-			{'x':3}
+			{'x':100},
+			{'x':200},
+			{'x':300},
+			{'x':400}
 		];
 
 		y = [
-			{'y':0},
-			{'y':1},
-			{'y':2},
-			{'y':3}
+			{'y':400},
+			{'y':300},
+			{'y':200},
+			{'y':100}
 		];
 
 		actual = betaln( data, y, {
@@ -403,10 +431,10 @@ describe( 'compute-betaln', function tests() {
 		});
 
 		expected = [
-			1,
-			1,
-			4,
-			27
+			-251.472411556025,
+			-337.980113065465,
+			-337.980113065465,
+			-251.472411556025
 		];
 
 		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
@@ -425,19 +453,19 @@ describe( 'compute-betaln', function tests() {
 		var data, actual, expected;
 
 		data = [
-			{'x':[3,0]},
-			{'x':[4,1]},
-			{'x':[5,2]},
-			{'x':[6,3]}
+			{'x':[9,1e-100]},
+			{'x':[9,1e-50]},
+			{'x':[9,1e-20]},
+			{'x':[9,1e-5]}
 		];
 		expected = [
-			{'x':[3,0]},
-			{'x':[4,1]},
-			{'x':[5,8]},
-			{'x':[6,27]}
+			{'x':[9,230.258509299405]},
+			{'x':[9,115.129254649702]},
+			{'x':[9,46.0517018598809]},
+			{'x':[9,11.5129725819815]}
 		];
 
-		actual = betaln( data, 3, {
+		actual = betaln( data, 0.2, {
 			'path': 'x.1'
 		});
 
@@ -447,12 +475,12 @@ describe( 'compute-betaln', function tests() {
 
 		// Specify a path with a custom separator...
 		data = [
-			{'x':[3,0]},
-			{'x':[4,1]},
-			{'x':[5,2]},
-			{'x':[6,3]}
+			{'x':[9,1e-100]},
+			{'x':[9,1e-50]},
+			{'x':[9,1e-20]},
+			{'x':[9,1e-5]}
 		];
-		actual = betaln( data, 3, {
+		actual = betaln( data, 0.2, {
 			'path': 'x/1',
 			'sep': '/'
 		});
@@ -465,34 +493,34 @@ describe( 'compute-betaln', function tests() {
 		var data, actual, expected, y;
 
 		data = [
-			{'x':0},
 			{'x':1},
 			{'x':2},
-			{'x':3}
+			{'x':3},
+			{'x':4}
 		];
 
-		y = [ 0, 1, 2, 3 ];
+		y = [ 1, 2, 3, 4 ];
 
 		actual = betaln( data, y, {
 			path: 'x'
 		});
 
 		expected = [
-			{'x':1},
-			{'x':1},
-			{'x':4},
-			{'x':27}
+			{'x':0},
+			{'x':-1.79175946922805},
+			{'x':-3.40119738166216},
+			{'x':-4.9416424226093}
 		];
 
 		assert.strictEqual( data, actual );
-		assert.deepEqual( data, expected);
+		assert.isTrue( deepCloseTo( data, expected, 1e-7 ) );
 
 		// Custom separator...
 		data = [
-			{'x':[9,0]},
 			{'x':[9,1]},
 			{'x':[9,2]},
-			{'x':[9,3]}
+			{'x':[9,3]},
+			{'x':[9,4]}
 		];
 
 		data = betaln( data, y, {
@@ -500,13 +528,13 @@ describe( 'compute-betaln', function tests() {
 			'sep': '/'
 		});
 		expected = [
-			{'x':[9,1]},
-			{'x':[9,1]},
-			{'x':[9,4]},
-			{'x':[9,27]}
+			{'x':[9,0]},
+			{'x':[9,-1.79175946922805]},
+			{'x':[9,-3.40119738166216]},
+			{'x':[9,-4.9416424226093]}
 		];
 
-		assert.deepEqual( data, expected, 'custom separator' );
+		assert.isTrue( deepCloseTo( data, expected, 1e-7 ), 'custom separator' );
 	});
 
 	it( 'should evaluate the betaln function for a matrix and a scalar', function test() {
@@ -522,8 +550,8 @@ describe( 'compute-betaln', function tests() {
 		d3 = new Int32Array( 100 );
 		for ( i = 0; i < d1.length; i++ ) {
 			d1[ i ] = i;
-			d2[ i ] = Math.betaln( i, i );
-			d3[ i ] = Math.betaln( i, 2 );
+			d2[ i ] = BETALN( i, i );
+			d3[ i ] = BETALN( i, 2 );
 		}
 
 		// Raise matrix elements to a scalar power
@@ -560,7 +588,7 @@ describe( 'compute-betaln', function tests() {
 		d2 = new Uint16Array( 100 );
 		for ( i = 0; i < d1.length; i++ ) {
 			d1[ i ] = i;
-			d2[ i ] = Math.betaln( i, 2 );
+			d2[ i ] = BETALN( i, 2 );
 		}
 		mat = matrix( d1, [10,10], 'int16' );
 		out = betaln( mat, 2, {

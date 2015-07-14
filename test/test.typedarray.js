@@ -29,27 +29,33 @@ describe( 'typed-array betaln', function tests() {
 
 
 	it( 'should evaluate the function when x and y are typed arrays', function test() {
-		var data, actual, expected, y;
+		var data, actual, expected, y, i;
 
 		data = new Float64Array([
-			0,
 			1,
 			2,
-			3
+			3,
+			4
 		]);
 		y = new Float64Array([
-			0,
 			1,
 			2,
-			3
+			3,
+			4
 		]);
 		actual = new Float64Array( data.length );
 
 		actual = betaln( actual, data, y );
 
-		expected = new Float64Array( [1,1,4,27] );
-
-		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
+		expected = new Float64Array([
+			0,
+			-1.79175946922805,
+			-3.40119738166216,
+			-4.9416424226093
+		]);
+		for ( i = 0; i < actual.length; i++ ) {
+			assert.closeTo( actual[ i ], expected[ i ], 1e-14 );
+		}
 
 	});
 
@@ -85,7 +91,7 @@ describe( 'typed-array betaln', function tests() {
 		y = [ 1, 2, 3, null ];
 		actual = betaln( actual, data, y );
 
-		expected = [ 1, 4, 27, NaN ];
+		expected = [ 0, -1.79175946922805, -3.40119738166216, NaN ];
 
 		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
 

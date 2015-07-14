@@ -25,7 +25,13 @@
   "keywords": [
     "compute.io",
     "compute",
-    "computation"
+    "computation",
+    "mathematics",
+    "math",
+    "special functions",
+    "natural logarithm",
+    "beta",
+    "gamma"
   ],
   "bugs": {
     "url": "https://github.com/compute-io/betaln/issues"
@@ -33,6 +39,7 @@
   "dependencies": {
     "compute-array-constructors": "^1.0.0",
     "dstructs-matrix": "^2.0.0",
+    "gamma": "^1.0.0",
     "utils-deep-get": "^1.0.0",
     "utils-deep-set": "^1.0.1",
     "validate.io-array-like": "^1.0.1",

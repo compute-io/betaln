@@ -6,6 +6,9 @@
 var // Expectation library:
 	chai = require( 'chai' ),
 
+	// Validate a value is NaN:
+	isnan = require( 'validate.io-nan' ),
+
 	// Module to be tested:
 	betaln = require( './../lib/number.js' );
 
@@ -25,7 +28,14 @@ describe( 'number betaln', function tests() {
 	});
 
 	it( 'should evaluate the function', function test() {
-		assert.closeTo( betaln( 0, 0 ), 0, 1e-4 );
+		assert.strictEqual( betaln( 0, 0 ), Number.POSITIVE_INFINITY );
+		assert.closeTo( betaln( 1e-200, 1e-200 ), 461.210165779369, 1e-10 );
+		assert.closeTo( betaln( 10000, 10000 ), -13866.2832567614, 1e-10 );
+	});
+
+	it( 'should return NaN for negative values', function test() {
+		isnan( betaln( -2, 5 ), NaN );
+		isnan( betaln( 4, -3 ), NaN );
 	});
 
 });

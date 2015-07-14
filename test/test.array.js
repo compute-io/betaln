@@ -31,41 +31,40 @@ describe( 'array betaln', function tests() {
 			var data, actual, expected;
 
 			data = [
-				1,
-				2,
-				3,
-				4,
-				5
+				0.1,
+				0.2,
+				0.3,
+				0.4,
+				0.5,
 			];
 			actual = new Array( data.length );
 
 			actual = betaln( actual, data, 2 );
 
 			expected = [
-				1,
-				4,
-				9,
-				16,
-				25
+				2.20727491318972,
+				1.42711635564015,
+				0.941608539858445,
+				0.579818495252942,
+				0.287682072451781
 			];
 
-			assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
+			assert.isTrue( deepCloseTo( actual, expected, 1e-12 ) );
 
 			// Typed arrays...
-			data = new Int32Array( data );
-			actual = new Int32Array( data.length );
+			data = new Float32Array( data );
+			actual = new Float64Array( data.length );
 
 			actual = betaln( actual, data, 2 );
-			expected = new Int32Array( expected );
+			expected = new Float64Array( expected );
 
-			assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
+			assert.isTrue( deepCloseTo( actual.data, expected.data, 1e-7 ) );
 		});
 
 		it( 'should evaluate the function when y is an array', function test() {
 			var data, actual, expected, y;
 
 			data = [
-				0,
 				1,
 				2,
 				3,
@@ -73,7 +72,6 @@ describe( 'array betaln', function tests() {
 			];
 
 		 	y = [
-				0,
 				1,
 				2,
 				3,
@@ -84,19 +82,22 @@ describe( 'array betaln', function tests() {
 			actual = betaln( actual, data, y );
 
 			expected = [
-
+				0,
+				-1.79175946922805,
+				-3.40119738166216,
+				-4.9416424226093
 			];
 
 			assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
 
 			// Typed arrays...
 			data = new Int32Array( data );
-			actual = new Int32Array( data.length );
+			actual = new Float32Array( data.length );
 
 			actual = betaln( actual, data, y );
-			expected = new Int32Array( expected );
+			expected = new Float32Array( expected );
 
-			assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
+			assert.isTrue( deepCloseTo( actual.data, expected.data, 1e-7 ) );
 		});
 
 		it( 'should return an empty array if provided an empty array', function test() {
@@ -135,7 +136,7 @@ describe( 'array betaln', function tests() {
 			y = new Int32Array( [1,2,3] );
 			actual = new Array( data.length );
 			actual = betaln( actual, data, y );
-			expected = [ 1, NaN, 27 ];
+			expected = [ 0, NaN, -3.40119738166216 ];
 
 			assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
 

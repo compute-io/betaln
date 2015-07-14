@@ -31,19 +31,22 @@ describe( 'accessor betaln', function tests() {
 		var data, actual, expected;
 
 		data = [
-			{'x':0},
 			{'x':1},
 			{'x':2},
-			{'x':3}
+			{'x':3},
+			{'x':300}
 		];
 		actual = new Array( data.length );
 		actual = betaln( actual, data, 2, getValue );
 
 		expected = [
-
+			-0.693147180559945,
+			-1.79175946922805,
+			-2.484906649788,
+			-11.4108927394051
 		];
 
-		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
+		assert.isTrue( deepCloseTo( actual, expected, 1e-12 ) );
 
 		function getValue( d ) {
 			return d.x;
@@ -55,24 +58,27 @@ describe( 'accessor betaln', function tests() {
 		var data, actual, expected, y;
 
 		data = [
-			{'x':0},
-			{'x':1},
-			{'x':2},
-			{'x':3}
+			{'x':10},
+			{'x':20},
+			{'x':30},
+			{'x':40}
 		];
 
 		y = [
-			0,
-			1,
-			2,
-			3
+			10,
+			20,
+			30,
+			40
 		];
 
 		actual = new Array( data.length );
 		actual = betaln( actual, data, y, getValue );
 
 		expected = [
-
+			-13.7362292270366,
+			-27.9519918862445,
+			-42.0197509271135,
+			-56.0275771297329
 		];
 
 		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
@@ -87,24 +93,27 @@ describe( 'accessor betaln', function tests() {
 		var data, actual, expected, y;
 
 		data = [
-			{'x':0},
-			{'x':1},
-			{'x':2},
-			{'x':3}
+			{'x':100},
+			{'x':200},
+			{'x':300},
+			{'x':400}
 		];
 
 		y = [
-			{'y':0},
-			{'y':1},
-			{'y':2},
-			{'y':3}
+			{'y':400},
+			{'y':300},
+			{'y':200},
+			{'y':100}
 		];
 
 		actual = new Array( data.length );
 		actual = betaln( actual, data, y, getValue );
 
 		expected = [
-
+			-251.472411556025,
+			-337.980113065465,
+			-337.980113065465,
+			-251.472411556025
 		];
 
 		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
@@ -138,7 +147,7 @@ describe( 'accessor betaln', function tests() {
 		actual = new Array( data.length );
 		actual = betaln( actual, data, 1, getValue );
 
-		expected = [ 1, NaN, 3 ];
+		expected = [ 0, NaN, -1.09861228866811 ];
 		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
 
 		// single non-numeric value
@@ -153,7 +162,7 @@ describe( 'accessor betaln', function tests() {
 		y = [ 1, 2, 3 ];
 		actual = new Array( data.length );
 		actual = betaln( actual, data, y, getValue );
-		expected = [ 1, NaN, 27 ];
+		expected = [ 0, NaN, -3.40119738166216 ];
 
 		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
 
@@ -165,7 +174,7 @@ describe( 'accessor betaln', function tests() {
 		y = new Int32Array( [1,2,3] );
 		actual = new Array( data.length );
 		actual = betaln( actual, data, y, getValue );
-		expected = [ 1, NaN, 27 ];
+		expected = [ 0, NaN, -3.40119738166216 ];
 
 		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
 
@@ -177,7 +186,7 @@ describe( 'accessor betaln', function tests() {
 		];
 		actual = new Array( data.length );
 		actual = betaln( actual, data, y, getValue2 );
-		expected = [ 1, NaN, 27 ];
+		expected = [ 0, NaN, -3.40119738166216 ];
 
 		assert.isTrue( deepCloseTo( actual, expected, 1e-7 ) );
 
