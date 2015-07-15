@@ -69,6 +69,13 @@ describe( 'matrix betaln', function tests() {
 		}
 	});
 
+	it( 'should throw an error if provided an array as the y argument', function test() {
+		expect( foo ).to.throw( Error );
+		function foo() {
+			betaln( matrix( [5,5] ), mat, [1,2,3,4,5] );
+		}
+	});
+
 	it( 'should evaluate the betaln function for a matrix and a scalar', function test() {
 		var actual;
 

@@ -9,6 +9,9 @@ var // Expectation library:
 	// Deep close to:
 	deepCloseTo = require( './utils/deepcloseto.js' ),
 
+	// Matrix data structure:
+	matrix = require( 'dstructs-matrix' ),
+
 	// Module to be tested:
 	betaln = require( './../lib/typedarray.js' );
 
@@ -101,5 +104,12 @@ describe( 'typed-array betaln', function tests() {
 		assert.deepEqual( betaln( new Int8Array(), new Int8Array() ), new Int8Array() );
 	});
 
+
+	it( 'should throw an error if provided a matrix as y argument', function test() {
+		expect( foo ).to.throw( Error );
+		function foo() {
+			betaln( [], [1,2,3,4], matrix( new Int32Array( [1,2,3,4] ), [2,2] ) );
+		}
+	});
 
 });

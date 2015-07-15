@@ -9,6 +9,9 @@ var // Expectation library:
 	// Deep close to:
 	deepCloseTo = require( './utils/deepcloseto.js' ),
 
+	// Matrix data structure:
+	matrix = require( 'dstructs-matrix' ),
+
 	// Module to be tested:
 	betaln = require( './../lib/deepset.js' );
 
@@ -186,5 +189,21 @@ describe( 'deepset betaln', function tests() {
 		assert.isTrue( deepCloseTo( data, expected, 1e-7 ) );
 	});
 
+	it( 'should throw an error if provided a matrix as y argument', function test() {
+		var data, y;
+
+		data = [
+			{'x':[9,0]},
+			{'x':[9,1]},
+			{'x':[9,2]},
+			{'x':[9,3]}
+		];
+		y = matrix( new Int32Array( [1,2,3,4] ), [2,2] );
+
+		expect( foo ).to.throw( Error );
+		function foo() {
+			betaln(data, y, 'x.1' );
+		}
+	});
 
 });

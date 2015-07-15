@@ -9,6 +9,9 @@ var // Expectation library:
 	// Validate a value is NaN:
 	isnan = require( 'validate.io-nan' ),
 
+	// Matrix data structure:
+	matrix = require( 'dstructs-matrix' ),
+
 	// Module to be tested:
 	betaln = require( './../lib/number.js' );
 
