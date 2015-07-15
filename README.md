@@ -2,7 +2,14 @@ betaln
 ===
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Dependencies][dependencies-image]][dependencies-url]
 
-> Evaluates the natural logarithm of the beta function.
+> Evaluates the natural logarithm of the [Beta function](http://en.wikipedia.org/wiki/Beta_function).
+
+This function evaluates the natural logarithm of the [Beta function](http://en.wikipedia.org/wiki/Beta_function) which can be defined as follows:
+
+<div class="equation" align="center" data-raw-text="\ln \operatorname{Beta}(x,y)= \ln \Gamma(x) + \ln \Gamma(y) - \ln \Gamma(x+y)" data-equation="eq:betaln_function">
+	<img src="https://cdn.rawgit.com/compute-io/betaln/3df019ad7e83d93d7e9f31b90a6f9c52a2cb377f/docs/img/eqn.svg" alt="Equation for the natural logarithm of the beta function.">
+	<br>
+</div>
 
 
 ## Installation
@@ -195,7 +202,7 @@ var data,
 
 var data = [ 1, 2, 3, 4 ];
 
-var out = betaln( data, {
+var out = betaln( data, 100, {
 	'copy': false
 });
 // returns [ ~0, ~-0.693, ~-1.099, ~-1.386 ]
