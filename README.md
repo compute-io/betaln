@@ -20,9 +20,9 @@ For use in the browser, use [browserify](https://github.com/substack/node-browse
 var betaln = require( 'compute-betaln' );
 ```
 
-#### betaln( x[, options] )
+#### betaln( x, y[, options] )
 
-Evaluates the [error function](http://en.wikipedia.org/wiki/Error_function) (element-wise). `x` may be either a [`number`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number), an [`array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array), a [`typed array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Typed_arrays), or a [`matrix`](https://github.com/dstructs/matrix). 
+Evaluates the natural logarithm of the [Beta function](http://en.wikipedia.org/wiki/Beta_function) (element-wise). . `x` may be either a [`number`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number), an [`array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array), a [`typed array`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Typed_arrays), or a [`matrix`](https://github.com/dstructs/matrix). `y` has to be either an `array` or `matrix` of equal dimensions as `x` or a single number. Correspondingly, the function returns either an `array` with the same length as the input `array(s)`, a `matrix` with the same dimensions as the input `matrix/matrices` or a single number.
 
 ``` javascript
 var matrix = require( 'dstructs-matrix' ),
@@ -31,19 +31,31 @@ var matrix = require( 'dstructs-matrix' ),
 	out,
 	i;
 
-out = betaln( -1 );
-// returns -0.8427
+out = betaln( 0, 0 );
+// returns +Infinity
+
+out = betaln( 0.001, 0.001 );
+// returns ~7.601
+
+out = betaln( -1, 2 );
+// return NaN
+
+out = betaln( [1,2,3,4], 1 );
+// returns [ ~0, ~-0.693, ~-1.099, ~-1.386 ]
+
+out = betaln( 1, [1,2,3,4] );
+// returns [ ~0, ~-0.693, ~-1.099, ~-1.386 ]
 
 out = betaln( [ -10, -1, 0, 1, 10 ] );
 // returns [ -1, -0.8427, 0, 0.8427, 1 ]
 
-data = [ 0, 1, 2 ];
-out = betaln( data );
-// returns [ 0, ~0.8427007, ~0.9953222 ]
+data = [ 0, 0.5, 1, 1.5, 2 ];
+out = betaln( data, 100 );
+// returns [ +Infintiy, ~-1.729, ~-4.605, ~-7.032, ~-9.22 ]
 
 data = new Int8Array( data );
-out = betaln( data );
-// returns Float64Array( [ 0, ~0.8427007, ~0.9953222 ] )
+out = betaln( data, 100 );
+// returns Float64Array( [ +Infintiy, +Infinity, ~-4.605, ~-4.605, ~-9.22 ] )
 
 data = new Float64Array( 6 );
 for ( i = 0; i < 6; i++ ) {
@@ -56,11 +68,11 @@ mat = matrix( data, [3,2], 'float64' );
 	  2  2.5 ]
 */
 
-out = betaln( mat );
+out = betaln( mat, 0.5  );
 /*
-	[  0    ~0.52
-	  ~0.84 ~0.97
-	  ~1    ~1    ]
+	[ +Inf   ~1.145
+	  ~0.693 ~0.452
+	  ~0.288 ~0.164 ]
 */
 ```
 
@@ -76,42 +88,76 @@ For non-numeric `arrays`, provide an accessor `function` for accessing `array` v
 
 ``` javascript
 var data = [
-	['beep', -10],
-	['boop', -1],
-	['bip', 0],
-	['bap', 1],
-	['baz', 10]
+	['beep', 0],
+	['boop', 0.5],
+	['bip', 1],
+	['bap', 1.5],
+	['baz', 2]
 ];
 
 function getValue( d, i ) {
 	return d[ 1 ];
 }
 
-var out = betaln( data, {
+var out = betaln( data, 100, {
 	'accessor': getValue
 });
-// returns [ -1, -0.8427, 0, 0.8427, 1 ]
+// returns [ +Infintiy, ~-1.729, ~-4.605, ~-7.032, ~-9.22 ]
 ```
+
+When evaluating the `betaln` function for values of two object `arrays`, provide an accessor `function` which accepts `3` arguments.
+
+``` javascript
+var data = [
+	['beep', 2],
+	['boop', 3],
+	['bip', 4],
+	['bap', 5],
+	['baz', 6]
+];
+
+var arr = [
+	{'x': 2},
+	{'x': 3},
+	{'x': 4},
+	{'x': 5},
+	{'x': 6}
+];
+
+function getValue( d, i, j ) {
+	if ( j === 0 ) {
+		return d[ 1 ];
+	}
+	return d.x;
+}
+
+var out = beta( data, arr, {
+	'accessor': getValue
+});
+// returns [ ~-1.792, ~-3.402, ~-4.942, ~-6.446, ~-7.927 ]
+```
+
+__Note__: `j` corresponds to the input `array` index, where `j=0` is the index for the first input `array` and `j=1` is the index for the second input `array`.
 
 To [deepset](https://github.com/kgryte/utils-deep-set) an object `array`, provide a key path and, optionally, a key path separator.
 
 ``` javascript
 var data = [
-	{'x':[0,-10]},
-	{'x':[1,-1]},
-	{'x':[2,0]},
-	{'x':[3,1]},
-	{'x':[4,10]}
+	{'x':[0,10]},
+	{'x':[1,100]},
+	{'x':[2,1000]},
+	{'x':[3,10000]},
+	{'x':[4,100000]}
 ];
 
-var out = betaln( data, 'x|1', '|' );
+var out = betaln( data, 0.1, 'x|1', '|' );
 /*
 	[
-		{'x':[0,-1]},
-		{'x':[1,-0.8427]},
-		{'x':[2,0]},
-		{'x':[3,0.8427]},
-		{'x':[4,1]}
+		{'x':[0,~2.0.27]},
+		{'x':[1,~1.793]},
+		{'x':[2,~1.562]},
+		{'x':[3,~1.332]},
+		{'x':[4,~1.101]}
 	]
 */
 
@@ -124,18 +170,18 @@ By default, when provided a [`typed array`](https://developer.mozilla.org/en-US/
 ``` javascript
 var data, out;
 
-data = new Int8Array( [0, 1, 2] );
+data = new Int8Array( [1,2,3,4] );
 
-out = betaln( data, {
+out = betaln( data, 8, {
 	'dtype': 'int32'
 });
-// returns Int32Array( [0,0,0] )
+// returns Int32Array( [-2,-4,-5,-7] )
 
 // Works for plain arrays, as well...
-out = betaln( [0, 1, 2], {
-	'dtype': 'uint8'
+out = betaln( [ 1, 2, 3, 4 ], 8, {
+	'dtype': 'int8'
 });
-// returns Uint8Array( [0,0,0] )
+// returns Int8Array( [-2,-4,-5,-7] )
 ```
 
 By default, the function returns a new data structure. To mutate the input data structure (e.g., when input values can be discarded or when optimizing memory usage), set the `copy` option to `false`.
@@ -147,12 +193,12 @@ var data,
 	out,
 	i;
 
-var data = [ -10, -1, 0, 1, 10 ];
+var data = [ 1, 2, 3, 4 ];
 
 var out = betaln( data, {
 	'copy': false
 });
-// returns [ -1, -0.8427, 0, 0.8427, 1 ]
+// returns [ ~0, ~-0.693, ~-1.099, ~-1.386 ]
 
 bool = ( data === out );
 // returns true
@@ -168,13 +214,13 @@ mat = matrix( data, [3,2], 'float64' );
 	  2  2.5 ]
 */
 
-out = betaln( mat, {
+out = betaln( mat, 0.5, {
 	'copy': false
 });
 /*
-	[  0    ~0.52
-	  ~0.84 ~0.97
-	  ~1    ~1    ]
+	[ +Inf   ~1.145
+	  ~0.693 ~0.452
+	  ~0.288 ~0.164 ]
 */
 
 bool = ( mat === out );
@@ -189,16 +235,16 @@ bool = ( mat === out );
 	``` javascript
 	var data, out;
 
-	out = betaln( null );
+	out = betaln( null, 1 );
 	// returns NaN
 
-	out = betaln( true );
+	out = betaln( true, 1 );
 	// returns NaN
 
-	out = betaln( {'a':'b'} );
+	out = betaln( {'a':'b'}, 1 );
 	// returns NaN
 
-	out = betaln( [ true, null, [] ] );
+	out = betaln( [ true, null, [] ], 1 );
 	// returns [ NaN, NaN, NaN ]
 
 	function getValue( d, i ) {
@@ -211,12 +257,12 @@ bool = ( mat === out );
 		{'x':null}
 	];
 
-	out = betaln( data, {
+	out = betaln( data, 1, {
 		'accessor': getValue
 	});
 	// returns [ NaN, NaN, NaN, NaN ]
 
-	out = betaln( data, {
+	out = betaln( data, 1, {
 		'path': 'x'
 	});
 	/*
@@ -232,7 +278,7 @@ bool = ( mat === out );
 *	Be careful when providing a data structure which contains non-numeric elements and specifying an `integer` output data type, as `NaN` values are cast to `0`.
 
 	``` javascript
-	var out = betaln( [ true, null, [] ], {
+	var out = betaln( [ true, null, [] ], 1, {
 		'dtype': 'int8'
 	});
 	// returns Int8Array( [0,0,0] );
@@ -254,9 +300,9 @@ var data,
 // Plain arrays...
 data = new Array( 10 );
 for ( i = 0; i < data.length; i++ ) {
-	data[ i ] = Math.random()*20 - 10;
+	data[ i ] = Math.random();
 }
-out = betaln( data );
+out = betaln( data, 0.5 );
 
 // Object arrays (accessors)...
 function getValue( d ) {
@@ -267,7 +313,7 @@ for ( i = 0; i < data.length; i++ ) {
 		'x': data[ i ]
 	};
 }
-out = betaln( data, {
+out = betaln( data, 0.5, {
 	'accessor': getValue
 });
 
@@ -277,17 +323,17 @@ for ( i = 0; i < data.length; i++ ) {
 		'x': [ i, data[ i ].x ]
 	};
 }
-out = betaln( data, {
+out = betaln( data, 0.5, {
 	'path': 'x/1',
 	'sep': '/'
 });
 
 // Typed arrays...
-data = new Int32Array( 10 );
+data = new Float32Array( 10 );
 for ( i = 0; i < data.length; i++ ) {
-	data[ i ] = Math.random() * 100;
+	data[ i ] = Math.random();
 }
-tmp = betaln( data );
+tmp = betaln( data, 0.5 );
 out = '';
 for ( i = 0; i < data.length; i++ ) {
 	out += tmp[ i ];
@@ -297,12 +343,11 @@ for ( i = 0; i < data.length; i++ ) {
 }
 
 // Matrices...
-mat = matrix( data, [5,2], 'int32' );
-out = betaln( mat );
-
+mat = matrix( data, [5,2], 'float32' );
+out = betaln( mat, 0.5 );
 
 // Matrices (custom output data type)...
-out = betaln( mat, {
+out = betaln( mat, 0.5, {
 	'dtype': 'uint8'
 });
 ```

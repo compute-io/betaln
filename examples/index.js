@@ -13,9 +13,9 @@ var data,
 // Plain arrays...
 data = new Array( 10 );
 for ( i = 0; i < data.length; i++ ) {
-	data[ i ] = Math.random()*20 - 10;
+	data[ i ] = Math.random();
 }
-out = betaln( data );
+out = betaln( data, 0.5 );
 console.log( 'Arrays: %s\n', out );
 
 
@@ -29,7 +29,7 @@ for ( i = 0; i < data.length; i++ ) {
 		'x': data[ i ]
 	};
 }
-out = betaln( data, {
+out = betaln( data, 0.5, {
 	'accessor': getValue
 });
 console.log( 'Accessors: %s\n', out );
@@ -42,7 +42,7 @@ for ( i = 0; i < data.length; i++ ) {
 		'x': [ i, data[ i ].x ]
 	};
 }
-out = betaln( data, {
+out = betaln( data, 0.5, {
 	'path': 'x/1',
 	'sep': '/'
 });
@@ -53,11 +53,11 @@ console.log( '\n' );
 
 // ----
 // Typed arrays...
-data = new Int32Array( 10 );
+data = new Float32Array( 10 );
 for ( i = 0; i < data.length; i++ ) {
-	data[ i ] = Math.random() * 100;
+	data[ i ] = Math.random();
 }
-tmp = betaln( data );
+tmp = betaln( data, 0.5 );
 out = '';
 for ( i = 0; i < data.length; i++ ) {
 	out += tmp[ i ];
@@ -70,14 +70,14 @@ console.log( 'Typed arrays: %s\n', out );
 
 // ----
 // Matrices...
-mat = matrix( data, [5,2], 'int32' );
-out = betaln( mat );
+mat = matrix( data, [5,2], 'float32' );
+out = betaln( mat, 0.5 );
 console.log( 'Matrix: %s\n', out.toString() );
 
 
 // ----
 // Matrices (custom output data type)...
-out = betaln( mat, {
+out = betaln( mat, 0.5, {
 	'dtype': 'uint8'
 });
 console.log( 'Matrix (%s): %s\n', out.dtype, out.toString() );
